@@ -1,89 +1,122 @@
 @import "tailwindcss";
 
-/* ── Clinical Green Palette ─────────────────────────────────── */
+/* ── Apple Health & Telemetry Systemic Palette ────────────────────── */
 @theme {
-  /* Green scale from darkest to lightest */
-  --color-clinical-950: #081C15;
-  --color-clinical-900: #1B4332;
-  --color-clinical-800: #2D6A4F;
-  --color-clinical-700: #40916C;
-  --color-clinical-600: #52B788;
-  --color-clinical-500: #74C69D;
-  --color-clinical-400: #95D5B2;
-  --color-clinical-300: #B7E4C7;
-  --color-clinical-200: #D8F3DC;
+  /* Systemic Neutral Surfaces */
+  --color-surface-bg: #000000;
+  --color-surface-card: #121215;
+  --color-surface-elevated: #1a1a1f;
+  --color-surface-sheet: #16161a;
+  --color-surface-input: #09090b;
 
-  /* Semantic aliases */
-  --color-surface-bg: #081C15;
-  --color-surface-card: #1B4332;
-  --color-surface-elevated: #2D6A4F;
-  --color-accent: #52B788;
-  --color-accent-light: #74C69D;
-  --color-text-primary: #D8F3DC;
-  --color-text-secondary: #95D5B2;
-  --color-text-muted: #40916C;
-  --color-border: #2D6A4F;
+  /* Crisp Typography Hierarchy */
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
 
-  /* Clinical alert colors */
-  --color-alert-danger: #EF4444;
-  --color-alert-warning: #F59E0B;
-  --color-alert-ok: #52B788;
-  --color-alert-info: #3B82F6;
+  /* Subtle Hairline Borders */
+  --color-border-subtle: rgba(255, 255, 255, 0.07);
+  --color-border-card: rgba(255, 255, 255, 0.09);
+  --color-border-active: rgba(255, 255, 255, 0.2);
 
-  /* Typography */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
-    Consolas, monospace;
+  /* Purposeful Medical Channel Accents */
+  --color-accent: #10b981;
+  --color-accent-light: #34d399;
+  --color-channel-pulse: #34d399;
+  --color-channel-spo2: #38bdf8;
+  --color-channel-rr: #a78bfa;
+  --color-alert-danger: #f43f5e;
+  --color-alert-warning: #fbbf24;
+  --color-alert-ok: #10b981;
+
+  /* Systemic Fonts */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
 }
 
-/* ── Safe Area Utilities ─────────────────────────────────────── */
+/* ── iOS Safe Area Utilities ─────────────────────────────────────── */
 @utility pt-safe {
-  padding-top: env(safe-area-inset-top);
+  padding-top: max(env(safe-area-inset-top), 16px);
 }
 @utility pb-safe {
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: max(env(safe-area-inset-bottom), 20px);
 }
 @utility pl-safe {
-  padding-left: env(safe-area-inset-left);
+  padding-left: max(env(safe-area-inset-left), 16px);
 }
 @utility pr-safe {
-  padding-right: env(safe-area-inset-right);
-}
-@utility mt-safe {
-  margin-top: env(safe-area-inset-top);
-}
-@utility mb-safe {
-  margin-bottom: env(safe-area-inset-bottom);
+  padding-right: max(env(safe-area-inset-right), 16px);
 }
 
-/* ── iOS PWA Global Overrides ────────────────────────────────── */
+/* ── Clinical Tabular Numerals ────────────────────────────────────── */
+@utility font-vitals {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+}
+
+/* ── Emil Kowalski & Apple Design Interaction Primitives ─────────── */
+@utility btn-press {
+  transition: transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 120ms ease,
+    background-color 120ms ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.btn-press:active {
+  transform: scale(0.965);
+  opacity: 0.88;
+}
+
+@utility card-press {
+  transition: transform 140ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 140ms ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.card-press:active {
+  transform: scale(0.98);
+}
+
+/* ── Clean Scrollbars ────────────────────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── iOS Viewport & Standalone Stability ──────────────────────────── */
 html,
 body {
-  overscroll-behavior-y: none;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  background-color: #000000;
+  color: #fafafa;
+  font-family: var(--font-sans);
 }
 
-body {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  background-color: #081c15;
-  color: #d8f3dc;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* Allow text selection only inside designated input areas */
+/* Enforce 16px to prevent iOS Safari auto-zoom on input focus */
 input,
-textarea {
+textarea,
+select {
+  font-size: 16px !important;
   -webkit-user-select: text;
   user-select: text;
 }
 
-/* Smooth momentum scrolling for iOS */
+/* Inertia touch scrolling */
 .scroll-touch {
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }

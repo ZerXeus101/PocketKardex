@@ -1,26 +1,57 @@
 import { defineStore } from 'pinia'
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { db } from '../db/index.js'
-import { useLiveQuery } from '../composables/useLiveQuery.js'
+import { liveQuery } from 'dexie'
 import { usePatientStore } from './patientStore.js'
 
 export const useVitalsStore = defineStore('vitals', () => {
   const patientStore = usePatientStore()
 
-  // ── Reactive Query: vitals for active patient (newest first) ──
-  const vitalsForActivePatient = useLiveQuery(
-    async () => {
-      const pid = patientStore.activePatientId
-      if (pid === null) return []
-      return db
+  // ── Reactive Vitals for Active Patient ────────────────────
+  const vitalsForActivePatient = ref([])
+
+  async function loadVitalsForActivePatient() {
+    const pid = patientStore.activePatientId
+    if (pid === null || pid === undefined) {
+      vitalsForActivePatient.value = []
+      return
+    }
+
+    try {
+      const records = await db
         .table('vitals')
         .where('patientId')
         .equals(pid)
-        .reverse()
-        .sortBy('timestamp')
+        .toArray()
+
+      // Sort newest first
+      records.sort((a, b) => b.timestamp - a.timestamp)
+      vitalsForActivePatient.value = records
+    } catch (err) {
+      console.error('[vitalsStore] Failed to load vitals:', err)
+      vitalsForActivePatient.value = []
+    }
+  }
+
+  // Auto-reload whenever activePatientId changes (immediate)
+  watch(
+    () => patientStore.activePatientId,
+    () => {
+      loadVitalsForActivePatient()
     },
-    []
+    { immediate: true }
   )
+
+  // Auto-reload whenever ANY transaction touches the 'vitals' table
+  const vitalsObservable = liveQuery(() => db.table('vitals').toArray())
+  const vitalsSubscription = vitalsObservable.subscribe({
+    next: () => {
+      loadVitalsForActivePatient()
+    },
+    error: (err) => {
+      console.error('[vitalsStore] liveQuery error:', err)
+    }
+  })
 
   // ── Getter: latest vitals record for active patient ───────
   const latestVitals = computed(() => {
@@ -30,11 +61,6 @@ export const useVitalsStore = defineStore('vitals', () => {
   })
 
   // ── Abnormal Threshold Checks ─────────────────────────────
-
-  /**
-   * Check if a vitals record has any abnormal values.
-   * Returns an object with boolean flags per category.
-   */
   function checkAbnormals(record) {
     if (!record) return {}
 
@@ -84,42 +110,47 @@ export const useVitalsStore = defineStore('vitals', () => {
 
   /**
    * Get latest vitals for a specific patient (for bed deck alert dots).
-   * Returns a promise — use in async contexts, not reactive templates.
    */
   async function getLatestForPatient(patientId) {
-    const records = await db
-      .table('vitals')
-      .where('patientId')
-      .equals(patientId)
-      .reverse()
-      .sortBy('timestamp')
-    return records.length > 0 ? records[0] : null
+    try {
+      const records = await db
+        .table('vitals')
+        .where('patientId')
+        .equals(patientId)
+        .toArray()
+
+      if (records.length === 0) return null
+      records.sort((a, b) => b.timestamp - a.timestamp)
+      return records[0]
+    } catch {
+      return null
+    }
   }
 
   /**
    * Get all vitals for a specific patient (for endorsement).
    */
   async function getAllForPatient(patientId) {
-    return db
-      .table('vitals')
-      .where('patientId')
-      .equals(patientId)
-      .reverse()
-      .sortBy('timestamp')
+    try {
+      const records = await db
+        .table('vitals')
+        .where('patientId')
+        .equals(patientId)
+        .toArray()
+
+      records.sort((a, b) => a.timestamp - b.timestamp)
+      return records
+    } catch {
+      return []
+    }
   }
 
   // ── Actions ───────────────────────────────────────────────
 
   /**
    * Add a new vitals record.
-   * Auto-calculates pulseDeficit if both apical and radial are provided.
-   *
-   * @param {number} patientId
-   * @param {object} data — vital sign values
-   * @returns {Promise<number>} new vitals record id
    */
   async function addVitals(patientId, data) {
-    // Auto-calculate pulse deficit
     let pulseDeficit = null
     if (data.apicalPulse != null && data.radialPulse != null) {
       pulseDeficit = Math.abs(data.apicalPulse - data.radialPulse)
@@ -151,15 +182,16 @@ export const useVitalsStore = defineStore('vitals', () => {
       updatedAt: Date.now()
     })
 
+    // Immediately reload local state
+    await loadVitalsForActivePatient()
+
     return id
   }
 
   /**
    * Update an existing vitals record.
-   * Re-calculates pulseDeficit if pulse values changed.
    */
   async function updateVitals(id, changes) {
-    // Re-calculate pulse deficit if either pulse value is being changed
     if (changes.apicalPulse !== undefined || changes.radialPulse !== undefined) {
       const existing = await db.table('vitals').get(id)
       if (existing) {
@@ -172,6 +204,7 @@ export const useVitalsStore = defineStore('vitals', () => {
     }
 
     await db.table('vitals').update(id, changes)
+    await loadVitalsForActivePatient()
   }
 
   /**
@@ -179,20 +212,15 @@ export const useVitalsStore = defineStore('vitals', () => {
    */
   async function deleteVitals(id) {
     await db.table('vitals').delete(id)
+    await loadVitalsForActivePatient()
   }
 
   // ── Endorsement Formatter ─────────────────────────────────
-
-  /**
-   * Format a single vitals record as clinical shorthand.
-   * e.g. "11:30 | BP: 200/120 (L), 190/110 (R) | HR: 59 ap / 60 rad ..."
-   */
   function formatEndorsement(record) {
     if (!record) return ''
 
     const parts = []
 
-    // Timestamp
     const d = new Date(record.timestamp)
     const time = d.toLocaleTimeString('en-US', {
       hour: '2-digit',
@@ -255,15 +283,13 @@ export const useVitalsStore = defineStore('vitals', () => {
   }
 
   return {
-    // Reactive
     vitalsForActivePatient,
     latestVitals,
-    // Utilities
     checkAbnormals,
     getLatestForPatient,
     getAllForPatient,
     formatEndorsement,
-    // Actions
+    loadVitalsForActivePatient,
     addVitals,
     updateVitals,
     deleteVitals

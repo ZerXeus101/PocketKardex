@@ -1,10 +1,10 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { db } from '../db/index.js'
 import { usePatientStore } from '../stores/patientStore.js'
 import {
-  X, Download, Upload, Trash2, HardDrive,
-  ShieldCheck, AlertTriangle
+  X, Download, Upload, Trash2, Database,
+  ShieldCheck, AlertCircle
 } from 'lucide-vue-next'
 
 const props = defineProps({
@@ -19,7 +19,6 @@ const storagePersisted = ref(false)
 const storageEstimate = ref(null)
 const showClearConfirm = ref(false)
 
-// ── Storage Status ──────────────────────────────────────────
 async function checkStorage() {
   if (navigator.storage && navigator.storage.persisted) {
     storagePersisted.value = await navigator.storage.persisted()
@@ -32,6 +31,7 @@ async function checkStorage() {
 async function requestPersist() {
   if (navigator.storage && navigator.storage.persist) {
     storagePersisted.value = await navigator.storage.persist()
+    if (navigator.vibrate) navigator.vibrate(8)
   }
 }
 
@@ -42,7 +42,6 @@ watch(() => props.visible, (v) => {
   }
 })
 
-// ── Export ───────────────────────────────────────────────────
 async function exportData() {
   const patients = await db.table('patients').toArray()
   const vitals = await db.table('vitals').toArray()
@@ -60,14 +59,13 @@ async function exportData() {
 
   const a = document.createElement('a')
   a.href = url
-  a.download = `pocket-kardex-${new Date().toISOString().slice(0, 10)}.json`
+  a.download = `pocket-kardex-backup-${new Date().toISOString().slice(0, 10)}.json`
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
 }
 
-// ── Import ──────────────────────────────────────────────────
 const fileInput = ref(null)
 
 function triggerImport() {
@@ -83,16 +81,14 @@ async function handleImport(event) {
     const data = JSON.parse(text)
 
     if (!data.patients || !data.vitals) {
-      alert('Invalid file format: missing patients or vitals data.')
+      alert('Invalid backup file format.')
       return
     }
 
     await db.transaction('rw', db.table('patients'), db.table('vitals'), async () => {
-      // Clear existing
       await db.table('vitals').clear()
       await db.table('patients').clear()
 
-      // Import
       for (const p of data.patients) {
         await db.table('patients').add(p)
       }
@@ -102,22 +98,20 @@ async function handleImport(event) {
     })
 
     patientStore.ensureSelection()
-    alert(`Imported ${data.patients.length} patients and ${data.vitals.length} vitals records.`)
+    alert(`Successfully imported ${data.patients.length} patients and ${data.vitals.length} vitals records.`)
   } catch (err) {
     alert('Import failed: ' + err.message)
   }
 
-  // Reset file input
   event.target.value = ''
 }
 
-// ── Clear Shift ─────────────────────────────────────────────
 async function clearShift() {
+  if (navigator.vibrate) navigator.vibrate([10, 50, 10])
   await patientStore.clearAll()
   showClearConfirm.value = false
 }
 
-// Format bytes
 function formatBytes(bytes) {
   if (bytes == null) return '—'
   if (bytes < 1024) return bytes + ' B'
@@ -128,89 +122,108 @@ function formatBytes(bytes) {
 
 <template>
   <Teleport to="body">
-    <Transition name="modal">
+    <Transition name="ios-modal">
       <div
         v-if="visible"
-        class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center"
+        class="fixed inset-0 z-50 flex items-end justify-center select-none"
       >
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="$emit('close')" />
+        <div
+          class="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+          @click="$emit('close')"
+        />
 
-        <!-- Panel -->
-        <div class="relative w-full max-w-md bg-clinical-900 rounded-t-3xl sm:rounded-2xl
-                    border border-clinical-800 p-5 pb-safe space-y-5 z-10">
-
-          <!-- Handle -->
-          <div class="flex justify-center sm:hidden -mt-2 mb-1">
-            <div class="w-10 h-1 bg-clinical-700 rounded-full" />
+        <!-- Sheet Panel -->
+        <div
+          class="relative w-full max-w-lg bg-[#16161a] rounded-t-[32px] border-t border-white/[0.12] shadow-2xl p-5 pb-safe space-y-4 z-10 overflow-hidden"
+        >
+          <!-- Grab Handle -->
+          <div class="flex justify-center -mt-1 pb-1">
+            <div class="w-10 h-1 bg-white/20 rounded-full" />
           </div>
 
           <!-- Header -->
           <div class="flex items-center justify-between">
-            <h2 class="text-lg font-bold text-text-primary">Settings</h2>
+            <div>
+              <h2 class="text-[17px] font-bold tracking-tight text-white">
+                Settings & Local Storage
+              </h2>
+              <p class="text-[11px] text-zinc-400">
+                100% offline database stored locally on this device
+              </p>
+            </div>
             <button
               @click="$emit('close')"
-              class="w-9 h-9 flex items-center justify-center rounded-lg
-                     text-text-muted hover:text-text-primary hover:bg-clinical-800"
+              class="btn-press w-8.5 h-8.5 rounded-full bg-white/[0.08] flex items-center justify-center text-zinc-400 hover:text-white"
             >
-              <X :size="18" />
+              <X :size="16" />
             </button>
           </div>
 
-          <!-- Storage Status -->
-          <div class="bg-clinical-800 rounded-xl p-4 space-y-2">
-            <div class="flex items-center gap-2">
-              <HardDrive :size="16" class="text-text-muted" />
-              <h3 class="text-sm font-semibold text-text-primary">Storage</h3>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-text-secondary">Persistence:</span>
+          <!-- Storage Status Box -->
+          <div class="rounded-2xl bg-zinc-900 border border-white/[0.08] p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <Database :size="15" class="text-emerald-400" />
+                <span class="text-[13px] font-bold text-white">IndexedDB Persistence</span>
+              </div>
               <span
-                class="flex items-center gap-1 font-medium"
-                :class="storagePersisted ? 'text-accent' : 'text-alert-warning'"
+                class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                :class="[
+                  storagePersisted
+                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                    : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
+                ]"
               >
-                <component :is="storagePersisted ? ShieldCheck : AlertTriangle" :size="12" />
-                {{ storagePersisted ? 'Protected' : 'Not persisted' }}
+                <component :is="storagePersisted ? ShieldCheck : AlertCircle" :size="11" />
+                {{ storagePersisted ? 'Protected' : 'Standard' }}
               </span>
             </div>
-            <div v-if="storageEstimate" class="flex items-center justify-between text-xs">
-              <span class="text-text-secondary">Usage:</span>
-              <span class="text-text-primary font-mono">
+
+            <p class="text-[11px] text-zinc-400 leading-relaxed">
+              When persistent, iOS Safari will not purge clinical records under low disk storage pressure.
+            </p>
+
+            <div v-if="storageEstimate" class="flex justify-between text-[11px] text-zinc-400 pt-1 border-t border-white/[0.04]">
+              <span>Storage Used:</span>
+              <span class="font-vitals text-zinc-300 font-semibold">
                 {{ formatBytes(storageEstimate.usage) }} / {{ formatBytes(storageEstimate.quota) }}
               </span>
             </div>
+
             <button
               v-if="!storagePersisted"
               @click="requestPersist"
-              class="w-full mt-2 py-2 rounded-lg bg-clinical-700 text-accent
-                     text-xs font-medium hover:bg-clinical-600 transition-colors"
+              class="btn-press w-full h-10 mt-1 rounded-xl bg-zinc-800 border border-white/[0.08] text-white text-[12px] font-bold cursor-pointer"
             >
-              Request Persistent Storage
+              Request iOS Persistent Storage
             </button>
           </div>
 
-          <!-- Data Actions -->
-          <div class="space-y-2">
+          <!-- Grouped Data Actions -->
+          <div class="rounded-2xl bg-zinc-900 border border-white/[0.08] divide-y divide-white/[0.06] overflow-hidden">
             <!-- Export -->
             <button
               @click="exportData"
-              class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl
-                     bg-clinical-800 text-text-primary text-sm font-medium
-                     hover:bg-clinical-700 active:bg-clinical-600 transition-colors"
+              class="w-full flex items-center justify-between px-4 py-3.5 text-left text-white hover:bg-white/[0.04] active:bg-white/[0.08] transition-colors cursor-pointer"
             >
-              <Download :size="18" class="text-accent" />
-              Export Shift Data (JSON)
+              <div class="flex items-center gap-3">
+                <Download :size="17" class="text-emerald-400" />
+                <span class="text-[14px] font-semibold">Export Shift Data (JSON)</span>
+              </div>
+              <span class="text-[11px] text-zinc-500">Backup</span>
             </button>
 
             <!-- Import -->
             <button
               @click="triggerImport"
-              class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl
-                     bg-clinical-800 text-text-primary text-sm font-medium
-                     hover:bg-clinical-700 active:bg-clinical-600 transition-colors"
+              class="w-full flex items-center justify-between px-4 py-3.5 text-left text-white hover:bg-white/[0.04] active:bg-white/[0.08] transition-colors cursor-pointer"
             >
-              <Upload :size="18" class="text-accent" />
-              Import Shift Data (JSON)
+              <div class="flex items-center gap-3">
+                <Upload :size="17" class="text-emerald-400" />
+                <span class="text-[14px] font-semibold">Import Shift Data (JSON)</span>
+              </div>
+              <span class="text-[11px] text-zinc-500">Restore</span>
             </button>
             <input
               ref="fileInput"
@@ -224,40 +237,47 @@ function formatBytes(bytes) {
             <div v-if="!showClearConfirm">
               <button
                 @click="showClearConfirm = true"
-                class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl
-                       bg-clinical-800 text-alert-danger text-sm font-medium
-                       hover:bg-red-950/30 active:bg-red-950/50 transition-colors"
+                class="w-full flex items-center justify-between px-4 py-3.5 text-left text-rose-400 hover:bg-rose-950/20 active:bg-rose-950/40 transition-colors cursor-pointer"
               >
-                <Trash2 :size="18" />
-                Clear Current Shift
+                <div class="flex items-center gap-3">
+                  <Trash2 :size="17" class="text-rose-400" />
+                  <span class="text-[14px] font-semibold">Clear Current Shift</span>
+                </div>
+                <span class="text-[11px] text-rose-400/80">Flush</span>
               </button>
             </div>
 
-            <!-- Clear Confirm -->
-            <div
-              v-else
-              class="bg-red-950/30 border border-alert-danger/30 rounded-xl p-4 space-y-3"
-            >
-              <p class="text-sm text-alert-danger font-medium">
-                Delete all patients and vitals? This cannot be undone.
+            <!-- Confirmation Prompt -->
+            <div v-else class="p-3.5 bg-rose-950/40 space-y-2.5">
+              <p class="text-[12px] text-rose-200 font-semibold leading-snug">
+                Permanently purge all bed assignments and vitals for this shift?
               </p>
               <div class="flex gap-2">
                 <button
                   @click="showClearConfirm = false"
-                  class="flex-1 py-2.5 rounded-xl bg-clinical-800 text-text-secondary
-                         text-sm font-medium"
+                  class="btn-press flex-1 h-10 rounded-xl bg-zinc-800 border border-white/[0.08] text-zinc-300 text-[12px] font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   @click="clearShift"
-                  class="flex-1 py-2.5 rounded-xl bg-alert-danger text-white
-                         text-sm font-bold"
+                  class="btn-press flex-1 h-10 rounded-xl bg-rose-600 text-white text-[12px] font-bold cursor-pointer"
                 >
-                  Delete All
+                  Confirm Flush
                 </button>
               </div>
             </div>
+          </div>
+
+          <!-- App Brand & Version Footer -->
+          <div class="flex flex-col items-center justify-center pt-2 pb-1 text-center select-none">
+            <img
+              src="/icon.png"
+              alt="Pocket Kardex"
+              class="w-14 h-14 rounded-2xl shadow-lg border border-white/[0.1] mb-2 object-cover"
+            />
+            <span class="text-[13px] font-bold text-white tracking-tight">Pocket Kardex</span>
+            <span class="text-[11px] text-zinc-400 font-medium">Bedside Clinical Kardex • 100% Offline-First</span>
           </div>
         </div>
       </div>
@@ -266,22 +286,22 @@ function formatBytes(bytes) {
 </template>
 
 <style scoped>
-.modal-enter-active,
-.modal-leave-active {
+.ios-modal-enter-active,
+.ios-modal-leave-active {
   transition: opacity 0.2s ease;
 }
-.modal-enter-active > div:last-child,
-.modal-leave-active > div:last-child {
-  transition: transform 0.25s ease;
+.ios-modal-enter-active > div:last-child,
+.ios-modal-leave-active > div:last-child {
+  transition: transform 0.26s cubic-bezier(0.32, 0.72, 0, 1);
 }
-.modal-enter-from,
-.modal-leave-to {
+.ios-modal-enter-from,
+.ios-modal-leave-to {
   opacity: 0;
 }
-.modal-enter-from > div:last-child {
+.ios-modal-enter-from > div:last-child {
   transform: translateY(100%);
 }
-.modal-leave-to > div:last-child {
+.ios-modal-leave-to > div:last-child {
   transform: translateY(100%);
 }
 </style>

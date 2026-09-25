@@ -36,9 +36,13 @@ export const usePatientStore = defineStore('patients', () => {
    * Call after patients load.
    */
   function ensureSelection() {
+    if (patients.value.length === 0) {
+      activePatientId.value = null
+      return
+    }
     if (
-      activePatientId.value === null &&
-      patients.value.length > 0
+      activePatientId.value === null ||
+      !patients.value.some((p) => p.id === activePatientId.value)
     ) {
       activePatientId.value = patients.value[0].id
     }
@@ -86,10 +90,10 @@ export const usePatientStore = defineStore('patients', () => {
       await db.table('vitals').where('patientId').equals(id).delete()
       await db.table('patients').delete(id)
     })
-    // If we deleted the active patient, clear or reselect
+    // If we deleted the active patient, pick first remaining patient immediately
     if (activePatientId.value === id) {
-      activePatientId.value = null
-      ensureSelection()
+      const remaining = patients.value.filter((p) => p.id !== id)
+      activePatientId.value = remaining.length > 0 ? remaining[0].id : null
     }
   }
 

@@ -25,35 +25,83 @@ function update() {
   emit('update:modelValue', d.getTime())
 }
 
+function setPreset(minutesAgo) {
+  const target = Date.now() - minutesAgo * 60 * 1000
+  const d = new Date(target)
+  hours.value = d.getHours()
+  minutes.value = d.getMinutes()
+  emit('update:modelValue', target)
+}
+
 function padTwo(n) {
   return String(n).padStart(2, '0')
 }
 </script>
 
 <template>
-  <div class="flex items-center gap-1">
-    <select
-      v-model.number="hours"
-      @change="update"
-      class="bg-clinical-800 text-text-primary border border-clinical-700
-             rounded-lg px-2 py-2 text-center text-sm font-mono
-             focus:outline-none focus:border-accent appearance-none"
-    >
-      <option v-for="h in 24" :key="h - 1" :value="h - 1">
-        {{ padTwo(h - 1) }}
-      </option>
-    </select>
-    <span class="text-text-muted font-bold">:</span>
-    <select
-      v-model.number="minutes"
-      @change="update"
-      class="bg-clinical-800 text-text-primary border border-clinical-700
-             rounded-lg px-2 py-2 text-center text-sm font-mono
-             focus:outline-none focus:border-accent appearance-none"
-    >
-      <option v-for="m in 60" :key="m - 1" :value="m - 1">
-        {{ padTwo(m - 1) }}
-      </option>
-    </select>
+  <div class="space-y-2.5">
+    <div class="flex items-center justify-center gap-2">
+      <!-- Hour Select -->
+      <div class="relative">
+        <select
+          v-model.number="hours"
+          @change="update"
+          class="w-18 h-12 bg-zinc-900 border border-white/[0.12] rounded-xl text-center font-vitals text-base font-bold text-white focus:border-emerald-500 focus:outline-none appearance-none cursor-pointer"
+        >
+          <option v-for="h in 24" :key="h - 1" :value="h - 1">
+            {{ padTwo(h - 1) }}
+          </option>
+        </select>
+        <span class="absolute bottom-1 right-2 text-[9px] text-zinc-500 pointer-events-none">HR</span>
+      </div>
+
+      <span class="text-emerald-400 font-vitals text-lg font-bold">:</span>
+
+      <!-- Minute Select -->
+      <div class="relative">
+        <select
+          v-model.number="minutes"
+          @change="update"
+          class="w-18 h-12 bg-zinc-900 border border-white/[0.12] rounded-xl text-center font-vitals text-base font-bold text-white focus:border-emerald-500 focus:outline-none appearance-none cursor-pointer"
+        >
+          <option v-for="m in 60" :key="m - 1" :value="m - 1">
+            {{ padTwo(m - 1) }}
+          </option>
+        </select>
+        <span class="absolute bottom-1 right-2 text-[9px] text-zinc-500 pointer-events-none">MIN</span>
+      </div>
+    </div>
+
+    <!-- Quick Presets -->
+    <div class="flex items-center justify-center gap-1.5 pt-1">
+      <button
+        @click="setPreset(0)"
+        type="button"
+        class="btn-press px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/[0.08] text-[11px] font-semibold text-zinc-300"
+      >
+        Now
+      </button>
+      <button
+        @click="setPreset(15)"
+        type="button"
+        class="btn-press px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/[0.08] text-[11px] font-semibold text-zinc-300"
+      >
+        -15m
+      </button>
+      <button
+        @click="setPreset(30)"
+        type="button"
+        class="btn-press px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/[0.08] text-[11px] font-semibold text-zinc-300"
+      >
+        -30m
+      </button>
+      <button
+        @click="setPreset(60)"
+        type="button"
+        class="btn-press px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/[0.08] text-[11px] font-semibold text-zinc-300"
+      >
+        -1h
+      </button>
+    </div>
   </div>
 </template>

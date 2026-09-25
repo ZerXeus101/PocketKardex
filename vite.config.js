@@ -4,18 +4,23 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  server: {
+    watch: {
+      ignored: ['**/.agent/**', '**/.git/**']
+    }
+  },
   plugins: [
     vue(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon-192.png', 'icon-512.png'],
+      includeAssets: ['favicon.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'icon.png', 'logo.png'],
       manifest: {
         name: 'Pocket Kardex',
         short_name: 'Pocket Kardex',
         description: 'Bedside clinical vitals recorder for nursing students',
-        theme_color: '#081C15',
-        background_color: '#081C15',
+        theme_color: '#000000',
+        background_color: '#000000',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',

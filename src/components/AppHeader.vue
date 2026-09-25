@@ -1,39 +1,51 @@
 <script setup>
-import { Stethoscope, ClipboardList, Settings } from 'lucide-vue-next'
+import { ClipboardList, Settings2 } from 'lucide-vue-next'
 
 defineEmits(['openEndorsement', 'openSettings'])
 </script>
 
 <template>
-  <header class="sticky top-0 z-50 bg-clinical-900/95 backdrop-blur-sm border-b border-clinical-800 pt-safe">
-    <div class="flex items-center justify-between h-14 px-4">
-      <!-- App Title -->
-      <div class="flex items-center gap-2">
-        <Stethoscope :size="22" class="text-accent" />
-        <h1 class="text-lg font-bold text-text-primary tracking-tight">
-          Pocket Kardex
-        </h1>
+  <header
+    class="sticky top-0 z-40 w-full backdrop-blur-xl bg-black/75 border-b border-white/[0.08] pt-safe select-none transition-colors"
+  >
+    <div class="flex items-center justify-between h-13 px-4 max-w-lg mx-auto">
+      <!-- App Brand -->
+      <div class="flex items-center gap-2.5">
+        <img
+          src="/icon.png"
+          alt="Pocket Kardex"
+          class="w-8.5 h-8.5 rounded-xl shadow-sm object-cover border border-white/[0.12]"
+        />
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <h1 class="text-[17px] font-bold tracking-tight text-white">
+              Pocket Kardex
+            </h1>
+            <span
+              class="inline-flex items-center gap-1 text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-full bg-zinc-900 text-zinc-400 border border-white/[0.08] uppercase"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Bedside
+            </span>
+          </div>
+        </div>
       </div>
 
-      <!-- Quick Actions -->
+      <!-- Quick Action Controls (Strict 44x44pt Hitbox) -->
       <div class="flex items-center gap-1">
         <button
           @click="$emit('openEndorsement')"
-          class="flex items-center justify-center w-11 h-11 rounded-xl
-                 text-text-secondary hover:text-accent hover:bg-clinical-800
-                 active:bg-clinical-700 transition-colors"
+          class="btn-press w-11 h-11 flex items-center justify-center rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] active:bg-white/[0.1]"
           aria-label="Shift Endorsement"
         >
-          <ClipboardList :size="20" />
+          <ClipboardList :size="20" :stroke-width="1.8" />
         </button>
         <button
           @click="$emit('openSettings')"
-          class="flex items-center justify-center w-11 h-11 rounded-xl
-                 text-text-secondary hover:text-accent hover:bg-clinical-800
-                 active:bg-clinical-700 transition-colors"
-          aria-label="Settings"
+          class="btn-press w-11 h-11 flex items-center justify-center rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] active:bg-white/[0.1]"
+          aria-label="Settings & Shift Data"
         >
-          <Settings :size="20" />
+          <Settings2 :size="20" :stroke-width="1.8" />
         </button>
       </div>
     </div>

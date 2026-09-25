@@ -17,19 +17,24 @@ const patientStore = usePatientStore()
 const vitalsStore = useVitalsStore()
 const { activePatientId } = storeToRefs(patientStore)
 
-// ── Modal visibility ────────────────────────────────────────
+// ── Modal Visibility ────────────────────────────────────────
 const showVitalsEntry = ref(false)
 const showPatientModal = ref(false)
 const showEndorsement = ref(false)
 const showSettings = ref(false)
 
-// ── Edit states ─────────────────────────────────────────────
+// ── Edit States ─────────────────────────────────────────────
 const editingPatient = ref(null)
 const editingVitals = ref(null)
 
-// ── Patient actions ─────────────────────────────────────────
+// ── Patient Actions ─────────────────────────────────────────
 function openAddPatient() {
   editingPatient.value = null
+  showPatientModal.value = true
+}
+
+function openEditPatient(patient) {
+  editingPatient.value = patient
   showPatientModal.value = true
 }
 
@@ -42,89 +47,94 @@ async function handleSavePatient(data) {
   showPatientModal.value = false
 }
 
-// ── Vitals actions ──────────────────────────────────────────
+async function handleDeletePatient(id) {
+  await patientStore.deletePatient(id)
+  showPatientModal.value = false
+}
+
+// ── Vitals Actions ──────────────────────────────────────────
 function openRecordVitals() {
+  if (navigator.vibrate) navigator.vibrate(8)
   editingVitals.value = null
   showVitalsEntry.value = true
 }
 
 function openEditVitals(record) {
+  if (navigator.vibrate) navigator.vibrate(6)
   editingVitals.value = record
   showVitalsEntry.value = true
 }
 
 async function handleSaveVitals(data) {
   if (data.id) {
-    // Edit existing
     await vitalsStore.updateVitals(data.id, data)
   } else {
-    // New record
     await vitalsStore.addVitals(activePatientId.value, data)
   }
+  showVitalsEntry.value = false
+}
+
+async function handleDeleteVitals(id) {
+  await vitalsStore.deleteVitals(id)
   showVitalsEntry.value = false
 }
 </script>
 
 <template>
-  <div class="min-h-dvh bg-surface-bg flex flex-col">
-    <!-- Header -->
+  <div class="h-[100dvh] max-h-[100dvh] w-full bg-black flex flex-col overflow-hidden select-none">
+    <!-- Top Navigation & Clinical Branding -->
     <AppHeader
       @open-endorsement="showEndorsement = true"
       @open-settings="showSettings = true"
     />
 
-    <!-- Bed Deck Strip -->
+    <!-- Bed Deck: Horizontal Bed Telemetry Strip -->
     <BedDeck @add-patient="openAddPatient" />
 
-    <!-- Divider -->
-    <div class="h-px bg-clinical-800 mx-3" />
+    <!-- Main Telemetry Body: Isolated Scrollable View -->
+    <main class="flex-1 min-h-0 flex flex-col overflow-hidden relative">
+      <VitalsFeed
+        @edit-vitals="openEditVitals"
+        @edit-patient="openEditPatient"
+      />
 
-    <!-- Vitals Feed -->
-    <VitalsFeed @edit-vitals="openEditVitals" />
-
-    <!-- Floating Action Button: Record Vitals -->
-    <div class="sticky bottom-0 pb-safe z-40 pointer-events-none">
-      <div class="flex justify-center pb-4">
+      <!-- Native Floating Action Pill with Frosted Shield -->
+      <div
+        v-if="activePatientId"
+        class="absolute bottom-0 left-0 right-0 pointer-events-none pb-safe z-20 flex justify-center bg-gradient-to-t from-black via-black/85 to-transparent pt-6"
+      >
         <button
-          v-if="activePatientId"
           @click="openRecordVitals"
-          class="pointer-events-auto flex items-center gap-2
-                 px-6 py-3.5 rounded-2xl
-                 bg-accent text-clinical-950 font-bold text-sm
-                 shadow-lg shadow-accent/25
-                 active:bg-accent-light transition-all"
+          class="btn-press pointer-events-auto h-13 px-6 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-[15px] tracking-tight flex items-center gap-2 shadow-2xl shadow-emerald-500/30 border border-white/25 mb-1 cursor-pointer"
         >
-          <Plus :size="18" :stroke-width="2.5" />
-          Record Vitals
+          <Plus :size="19" :stroke-width="2.75" />
+          <span>Record Vitals</span>
         </button>
       </div>
-    </div>
+    </main>
 
-    <!-- ═══ MODALS ═══ -->
-
-    <!-- Vitals Entry Sheet -->
+    <!-- ═══ Native iOS Sheets & Modals ═══ -->
     <VitalsEntrySheet
       :visible="showVitalsEntry"
       :existing-record="editingVitals"
       @close="showVitalsEntry = false"
       @save="handleSaveVitals"
+      @delete="handleDeleteVitals"
     />
 
-    <!-- Patient Modal -->
     <PatientModal
       :visible="showPatientModal"
       :patient="editingPatient"
       @close="showPatientModal = false"
       @save="handleSavePatient"
+      @delete="handleDeletePatient"
     />
 
-    <!-- Endorsement Modal -->
     <EndorsementModal
       :visible="showEndorsement"
       @close="showEndorsement = false"
     />
 
-    <!-- Settings Modal -->
     <SettingsModal
       :visible="showSettings"
       @close="showSettings = false"
