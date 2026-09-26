@@ -81,7 +81,7 @@ async function handleDeleteVitals(id) {
 </script>
 
 <template>
-  <div class="h-[100dvh] max-h-[100dvh] w-full bg-black flex flex-col overflow-hidden select-none">
+  <div class="h-[100dvh] max-h-[100dvh] w-full bg-pk-canvas text-pk-primary flex flex-col overflow-hidden select-none">
     <!-- Top Navigation & Clinical Branding -->
     <AppHeader
       @open-endorsement="showEndorsement = true"
@@ -101,11 +101,13 @@ async function handleDeleteVitals(id) {
       <!-- Native Floating Action Pill with Frosted Shield -->
       <div
         v-if="activePatientId"
-        class="absolute bottom-0 left-0 right-0 pointer-events-none pb-safe z-20 flex justify-center bg-gradient-to-t from-black via-black/85 to-transparent pt-6"
+        class="absolute bottom-0 left-0 right-0 pointer-events-none pb-safe z-20 flex justify-center pt-6"
+        style="background: var(--pk-gradient-bottom)"
       >
         <button
           @click="openRecordVitals"
-          class="btn-press pointer-events-auto h-13 px-6 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-[15px] tracking-tight flex items-center gap-2 shadow-2xl shadow-emerald-500/30 border border-white/25 mb-1 cursor-pointer"
+          class="btn-press pointer-events-auto h-13 px-6 rounded-full bg-pk-fab text-pk-fab-text font-bold text-[15px] tracking-tight flex items-center gap-2 border border-black/10 mb-1 cursor-pointer transition-colors"
+          style="box-shadow: 0 10px 25px -5px var(--pk-fab-shadow)"
         >
           <Plus :size="19" :stroke-width="2.75" />
           <span>Record Vitals</span>

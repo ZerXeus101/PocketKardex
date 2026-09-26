@@ -19,31 +19,31 @@ const { vitalsForActivePatient } = storeToRefs(vitalsStore)
     <div
       v-if="activePatient"
       @click="$emit('editPatient', activePatient)"
-      class="card-press flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-[#121215] border border-white/[0.08] cursor-pointer select-none"
+      class="card-press flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-pk-card border border-pk-border cursor-pointer select-none shadow-sm transition-colors"
     >
       <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-8 h-8 rounded-xl bg-zinc-900 border border-white/[0.08] flex items-center justify-center flex-shrink-0 text-emerald-400">
+        <div class="w-8 h-8 rounded-xl bg-pk-subtle border border-pk-border flex items-center justify-center flex-shrink-0 text-emerald-500">
           <UserCheck :size="16" />
         </div>
         <div class="flex flex-col min-w-0">
           <div class="flex items-center gap-1.5">
-            <span class="text-[14px] font-bold text-white tracking-tight truncate">
+            <span class="text-[14px] font-bold text-pk-primary tracking-tight truncate">
               {{ activePatient.bedNumber }}
             </span>
-            <span v-if="activePatient.initials" class="text-[12px] font-medium text-zinc-400">
+            <span v-if="activePatient.initials" class="text-[12px] font-medium text-pk-secondary">
               ({{ activePatient.initials }})
             </span>
-            <span v-if="activePatient.ageGender" class="text-[12px] text-zinc-400">
+            <span v-if="activePatient.ageGender" class="text-[12px] text-pk-secondary">
               • {{ activePatient.ageGender }}
             </span>
           </div>
-          <span v-if="activePatient.diagnosis" class="text-[11px] text-zinc-400 truncate">
+          <span v-if="activePatient.diagnosis" class="text-[11px] text-pk-muted truncate">
             {{ activePatient.diagnosis }}
           </span>
         </div>
       </div>
 
-      <span class="text-[11px] text-zinc-400 hover:text-white font-medium px-2 py-0.5 rounded-lg bg-zinc-900 border border-white/[0.06] flex-shrink-0">
+      <span class="text-[11px] text-pk-secondary hover:text-pk-primary font-medium px-2 py-0.5 rounded-lg bg-pk-subtle border border-pk-border flex-shrink-0 transition-colors">
         Edit / Discharge
       </span>
     </div>
@@ -63,14 +63,14 @@ const { vitalsForActivePatient } = storeToRefs(vitalsStore)
       v-else-if="activePatient"
       class="flex flex-col items-center justify-center py-20 px-6 text-center select-none"
     >
-      <div class="w-14 h-14 rounded-2xl bg-[#121215] border border-white/[0.08] flex items-center justify-center text-zinc-500 mb-3.5 shadow-sm">
+      <div class="w-14 h-14 rounded-2xl bg-pk-card border border-pk-border flex items-center justify-center text-pk-muted mb-3.5 shadow-sm transition-colors">
         <Stethoscope :size="24" :stroke-width="1.75" />
       </div>
-      <h3 class="text-[15px] font-semibold text-white mb-1">
+      <h3 class="text-[15px] font-semibold text-pk-primary mb-1">
         No Telemetry Recorded
       </h3>
-      <p class="text-[12px] text-zinc-400 max-w-[220px]">
-        Tap <strong class="text-emerald-400">+ Record Vitals</strong> below to capture bedside observations.
+      <p class="text-[12px] text-pk-secondary max-w-[220px]">
+        Tap <strong class="text-emerald-500">+ Record Vitals</strong> below to capture bedside observations.
       </p>
     </div>
 
@@ -82,13 +82,13 @@ const { vitalsForActivePatient } = storeToRefs(vitalsStore)
       <img
         src="/icon.png"
         alt="Pocket Kardex"
-        class="w-16 h-16 rounded-2xl shadow-lg border border-white/[0.1] mb-3.5 object-cover"
+        class="w-16 h-16 rounded-2xl shadow-lg border border-pk-border mb-3.5 object-cover"
       />
-      <h3 class="text-[15px] font-semibold text-white mb-1">
+      <h3 class="text-[15px] font-semibold text-pk-primary mb-1">
         No Bed Selected
       </h3>
-      <p class="text-[12px] text-zinc-400 max-w-[220px]">
-        Select an active bed or tap <strong class="text-emerald-400">+ Add Bed</strong> above.
+      <p class="text-[12px] text-pk-secondary max-w-[220px]">
+        Select an active bed or tap <strong class="text-emerald-500">+ Add Bed</strong> above.
       </p>
     </div>
 

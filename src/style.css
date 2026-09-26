@@ -1,35 +1,196 @@
 @import "tailwindcss";
 
-/* ── Apple Health & Telemetry Systemic Palette ────────────────────── */
+/* ── Apple Health & Telemetry Systemic Multi-Theme Palette ────────── */
+:root,
+[data-theme="dark"] {
+  --pk-bg-canvas: #000000;
+  --pk-bg-header: rgba(0, 0, 0, 0.78);
+  --pk-bg-deck: rgba(0, 0, 0, 0.6);
+  --pk-bg-card: #121215;
+  --pk-bg-card-active: #18181b;
+  --pk-bg-sheet: #16161a;
+  --pk-bg-input: #09090b;
+  --pk-bg-subtle: rgba(255, 255, 255, 0.08);
+  --pk-bg-subtle-hover: rgba(255, 255, 255, 0.14);
+
+  --pk-text-primary: #fafafa;
+  --pk-text-secondary: #a1a1aa;
+  --pk-text-muted: #71717a;
+
+  --pk-border-subtle: rgba(255, 255, 255, 0.07);
+  --pk-border-card: rgba(255, 255, 255, 0.09);
+  --pk-border-sheet: rgba(255, 255, 255, 0.12);
+  --pk-border-active: rgba(16, 185, 129, 0.5);
+
+  --pk-fab-bg: #10b981;
+  --pk-fab-text: #000000;
+  --pk-fab-shadow: rgba(16, 185, 129, 0.3);
+  --pk-gradient-bottom: linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0.85) 60%, transparent 100%);
+
+  /* Channel Colors */
+  --pk-ch-bp-bg: #18181b;
+  --pk-ch-bp-text: #ffffff;
+  --pk-ch-bp-border: rgba(255, 255, 255, 0.08);
+
+  --pk-ch-hr-bg: rgba(16, 185, 129, 0.15);
+  --pk-ch-hr-text: #6ee7b7;
+  --pk-ch-hr-border: rgba(16, 185, 129, 0.3);
+
+  --pk-ch-spo2-bg: rgba(56, 189, 248, 0.15);
+  --pk-ch-spo2-text: #7dd3fc;
+  --pk-ch-spo2-border: rgba(56, 189, 248, 0.3);
+
+  --pk-ch-rr-bg: rgba(167, 139, 250, 0.15);
+  --pk-ch-rr-text: #c4b5fd;
+  --pk-ch-rr-border: rgba(167, 139, 250, 0.3);
+
+  --pk-ch-temp-bg: rgba(251, 146, 60, 0.15);
+  --pk-ch-temp-text: #fdba74;
+  --pk-ch-temp-border: rgba(251, 146, 60, 0.3);
+
+  --pk-ch-alert-bg: rgba(244, 63, 94, 0.15);
+  --pk-ch-alert-text: #fda4af;
+  --pk-ch-alert-border: rgba(244, 63, 94, 0.3);
+
+  --pk-ch-warn-bg: rgba(251, 191, 36, 0.15);
+  --pk-ch-warn-text: #fde68a;
+  --pk-ch-warn-border: rgba(251, 191, 36, 0.3);
+}
+
+[data-theme="light"] {
+  --pk-bg-canvas: #f4f4f6;
+  --pk-bg-header: rgba(244, 244, 246, 0.85);
+  --pk-bg-deck: rgba(235, 235, 240, 0.85);
+  --pk-bg-card: #ffffff;
+  --pk-bg-card-active: #f0fdf4;
+  --pk-bg-sheet: #ffffff;
+  --pk-bg-input: #f1f3f5;
+  --pk-bg-subtle: rgba(0, 0, 0, 0.05);
+  --pk-bg-subtle-hover: rgba(0, 0, 0, 0.09);
+
+  --pk-text-primary: #09090b;
+  --pk-text-secondary: #52525b;
+  --pk-text-muted: #71717a;
+
+  --pk-border-subtle: rgba(0, 0, 0, 0.08);
+  --pk-border-card: rgba(0, 0, 0, 0.08);
+  --pk-border-sheet: rgba(0, 0, 0, 0.12);
+  --pk-border-active: rgba(5, 150, 105, 0.5);
+
+  --pk-fab-bg: #059669;
+  --pk-fab-text: #ffffff;
+  --pk-fab-shadow: rgba(5, 150, 105, 0.25);
+  --pk-gradient-bottom: linear-gradient(to top, #f4f4f6 0%, rgba(244, 244, 246, 0.9) 60%, transparent 100%);
+
+  /* Channel Colors */
+  --pk-ch-bp-bg: #f4f4f5;
+  --pk-ch-bp-text: #09090b;
+  --pk-ch-bp-border: rgba(0, 0, 0, 0.08);
+
+  --pk-ch-hr-bg: #ecfdf5;
+  --pk-ch-hr-text: #047857;
+  --pk-ch-hr-border: #a7f3d0;
+
+  --pk-ch-spo2-bg: #f0f9ff;
+  --pk-ch-spo2-text: #0369a1;
+  --pk-ch-spo2-border: #bae6fd;
+
+  --pk-ch-rr-bg: #f5f3ff;
+  --pk-ch-rr-text: #6d28d9;
+  --pk-ch-rr-border: #ddd6fe;
+
+  --pk-ch-temp-bg: #fff7ed;
+  --pk-ch-temp-text: #c2410c;
+  --pk-ch-temp-border: #fed7aa;
+
+  --pk-ch-alert-bg: #fff1f2;
+  --pk-ch-alert-text: #be123c;
+  --pk-ch-alert-border: #fecdd3;
+
+  --pk-ch-warn-bg: #fffbeb;
+  --pk-ch-warn-text: #b45309;
+  --pk-ch-warn-border: #fde68a;
+}
+
+[data-theme="monochrome"] {
+  --pk-bg-canvas: #18181b;
+  --pk-bg-header: rgba(24, 24, 27, 0.85);
+  --pk-bg-deck: rgba(20, 20, 23, 0.75);
+  --pk-bg-card: #242429;
+  --pk-bg-card-active: #2e2e35;
+  --pk-bg-sheet: #202024;
+  --pk-bg-input: #141416;
+  --pk-bg-subtle: rgba(255, 255, 255, 0.08);
+  --pk-bg-subtle-hover: rgba(255, 255, 255, 0.15);
+
+  --pk-text-primary: #fafafa;
+  --pk-text-secondary: #a1a1aa;
+  --pk-text-muted: #71717a;
+
+  --pk-border-subtle: rgba(255, 255, 255, 0.1);
+  --pk-border-card: rgba(255, 255, 255, 0.1);
+  --pk-border-sheet: rgba(255, 255, 255, 0.15);
+  --pk-border-active: rgba(255, 255, 255, 0.4);
+
+  --pk-fab-bg: #fafafa;
+  --pk-fab-text: #09090b;
+  --pk-fab-shadow: rgba(0, 0, 0, 0.3);
+  --pk-gradient-bottom: linear-gradient(to top, #18181b 0%, rgba(24, 24, 27, 0.85) 60%, transparent 100%);
+
+  /* Channel Colors: Pure Minimalist Grayscale */
+  --pk-ch-bp-bg: #2e2e35;
+  --pk-ch-bp-text: #fafafa;
+  --pk-ch-bp-border: rgba(255, 255, 255, 0.12);
+
+  --pk-ch-hr-bg: #2e2e35;
+  --pk-ch-hr-text: #e4e4e7;
+  --pk-ch-hr-border: rgba(255, 255, 255, 0.12);
+
+  --pk-ch-spo2-bg: #2e2e35;
+  --pk-ch-spo2-text: #e4e4e7;
+  --pk-ch-spo2-border: rgba(255, 255, 255, 0.12);
+
+  --pk-ch-rr-bg: #2e2e35;
+  --pk-ch-rr-text: #e4e4e7;
+  --pk-ch-rr-border: rgba(255, 255, 255, 0.12);
+
+  --pk-ch-temp-bg: #2e2e35;
+  --pk-ch-temp-text: #e4e4e7;
+  --pk-ch-temp-border: rgba(255, 255, 255, 0.12);
+
+  --pk-ch-alert-bg: #fafafa;
+  --pk-ch-alert-text: #09090b;
+  --pk-ch-alert-border: #ffffff;
+
+  --pk-ch-warn-bg: #3f3f46;
+  --pk-ch-warn-text: #ffffff;
+  --pk-ch-warn-border: rgba(255, 255, 255, 0.3);
+}
+
 @theme {
-  /* Systemic Neutral Surfaces */
-  --color-surface-bg: #000000;
-  --color-surface-card: #121215;
-  --color-surface-elevated: #1a1a1f;
-  --color-surface-sheet: #16161a;
-  --color-surface-input: #09090b;
+  --color-pk-canvas: var(--pk-bg-canvas);
+  --color-pk-header: var(--pk-bg-header);
+  --color-pk-deck: var(--pk-bg-deck);
+  --color-pk-card: var(--pk-bg-card);
+  --color-pk-card-active: var(--pk-bg-card-active);
+  --color-pk-sheet: var(--pk-bg-sheet);
+  --color-pk-input: var(--pk-bg-input);
+  --color-pk-subtle: var(--pk-bg-subtle);
+  --color-pk-subtle-hover: var(--pk-bg-subtle-hover);
 
-  /* Crisp Typography Hierarchy */
-  --color-text-primary: #fafafa;
-  --color-text-secondary: #a1a1aa;
-  --color-text-muted: #71717a;
+  --color-pk-primary: var(--pk-text-primary);
+  --color-pk-secondary: var(--pk-text-secondary);
+  --color-pk-muted: var(--pk-text-muted);
 
-  /* Subtle Hairline Borders */
-  --color-border-subtle: rgba(255, 255, 255, 0.07);
-  --color-border-card: rgba(255, 255, 255, 0.09);
-  --color-border-active: rgba(255, 255, 255, 0.2);
+  --color-pk-border: var(--pk-border-subtle);
+  --color-pk-border-card: var(--pk-border-card);
+  --color-pk-border-sheet: var(--pk-border-sheet);
+  --color-pk-border-active: var(--pk-border-active);
 
-  /* Purposeful Medical Channel Accents */
-  --color-accent: #10b981;
-  --color-accent-light: #34d399;
-  --color-channel-pulse: #34d399;
-  --color-channel-spo2: #38bdf8;
-  --color-channel-rr: #a78bfa;
-  --color-alert-danger: #f43f5e;
-  --color-alert-warning: #fbbf24;
-  --color-alert-ok: #10b981;
+  --color-pk-fab: var(--pk-fab-bg);
+  --color-pk-fab-text: var(--pk-fab-text);
 
-  /* Systemic Fonts */
+  /* Tabular Font */
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
@@ -72,7 +233,8 @@
 
 @utility card-press {
   transition: transform 140ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-color 140ms ease;
+    border-color 140ms ease,
+    background-color 140ms ease;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -101,9 +263,10 @@ body {
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  background-color: #000000;
-  color: #fafafa;
+  background-color: var(--pk-bg-canvas);
+  color: var(--pk-text-primary);
   font-family: var(--font-sans);
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 /* Enforce 16px to prevent iOS Safari auto-zoom on input focus */

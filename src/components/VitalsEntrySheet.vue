@@ -165,20 +165,20 @@ function copyLeftToRight() {
 
         <!-- Sheet Panel -->
         <div
-          class="relative w-full max-w-lg bg-[#16161a] rounded-t-[32px] border-t border-white/[0.12] shadow-2xl max-h-[92dvh] flex flex-col z-10 overflow-hidden"
+          class="relative w-full max-w-lg bg-pk-sheet rounded-t-[32px] border-t border-pk-border-sheet shadow-2xl max-h-[92dvh] flex flex-col z-10 overflow-hidden transition-colors"
         >
           <!-- Native iOS Grab Handle -->
           <div class="flex justify-center pt-3 pb-1">
-            <div class="w-10 h-1 bg-white/20 rounded-full" />
+            <div class="w-10 h-1 bg-pk-muted/40 rounded-full" />
           </div>
 
           <!-- Header -->
           <div class="flex items-center justify-between px-5 py-2">
             <div>
-              <h2 class="text-[17px] font-bold tracking-tight text-white">
+              <h2 class="text-[17px] font-bold tracking-tight text-pk-primary">
                 {{ existingRecord ? 'Edit Bedside Vitals' : 'Record Bedside Vitals' }}
               </h2>
-              <p class="text-[11px] text-zinc-400">
+              <p class="text-[11px] text-pk-secondary">
                 Large touch targets optimized for gloved bedside use
               </p>
             </div>
@@ -186,7 +186,7 @@ function copyLeftToRight() {
               <button
                 v-if="existingRecord"
                 @click="showDeleteConfirm = !showDeleteConfirm"
-                class="btn-press w-8.5 h-8.5 rounded-full bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 hover:text-rose-300"
+                class="btn-press w-8.5 h-8.5 rounded-full bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-500 hover:text-rose-600 cursor-pointer"
                 aria-label="Delete vitals entry"
                 title="Delete vitals entry"
               >
@@ -194,7 +194,7 @@ function copyLeftToRight() {
               </button>
               <button
                 @click="$emit('close')"
-                class="btn-press w-8.5 h-8.5 rounded-full bg-white/[0.08] flex items-center justify-center text-zinc-400 hover:text-white"
+                class="btn-press w-8.5 h-8.5 rounded-full bg-pk-subtle flex items-center justify-center text-pk-secondary hover:text-pk-primary cursor-pointer"
               >
                 <X :size="16" />
               </button>
@@ -204,21 +204,21 @@ function copyLeftToRight() {
           <!-- Delete Confirmation Banner -->
           <div
             v-if="showDeleteConfirm"
-            class="mx-5 mb-2 p-3 rounded-2xl bg-rose-950/40 border border-rose-500/30 space-y-2.5"
+            class="mx-5 mb-2 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/25 space-y-2.5"
           >
-            <p class="text-[12px] font-semibold text-rose-200">
+            <p class="text-[12px] font-semibold text-rose-600 dark:text-rose-200">
               Permanently delete this vitals record?
             </p>
             <div class="flex gap-2">
               <button
                 @click="showDeleteConfirm = false"
-                class="btn-press flex-1 h-9 rounded-xl bg-zinc-800 text-zinc-300 text-[12px] font-semibold"
+                class="btn-press flex-1 h-9 rounded-xl bg-pk-subtle border border-pk-border text-pk-secondary text-[12px] font-semibold cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 @click="confirmDelete"
-                class="btn-press flex-1 h-9 rounded-xl bg-rose-600 text-white text-[12px] font-bold"
+                class="btn-press flex-1 h-9 rounded-xl bg-rose-600 text-white text-[12px] font-bold cursor-pointer"
               >
                 Confirm Delete
               </button>
@@ -229,13 +229,13 @@ function copyLeftToRight() {
           <div class="px-5 pt-1 pb-3">
             <button
               @click="showTimePicker = !showTimePicker"
-              class="btn-press inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/[0.08] text-emerald-400 text-[13px] font-vitals font-semibold"
+              class="btn-press inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-pk-card border border-pk-border text-emerald-500 text-[13px] font-vitals font-semibold shadow-sm cursor-pointer transition-colors"
             >
               <Clock :size="13" />
               <span>Assessment Time: {{ timeDisplay }}</span>
-              <component :is="showTimePicker ? ChevronUp : ChevronDown" :size="13" class="text-zinc-400" />
+              <component :is="showTimePicker ? ChevronUp : ChevronDown" :size="13" class="text-pk-secondary" />
             </button>
-            <div v-if="showTimePicker" class="mt-2.5 p-3 rounded-2xl bg-zinc-950 border border-white/[0.08]">
+            <div v-if="showTimePicker" class="mt-2.5 p-3 rounded-2xl bg-pk-input border border-pk-border shadow-sm">
               <TimePicker v-model="timestamp" />
             </div>
           </div>
@@ -246,13 +246,13 @@ function copyLeftToRight() {
             <!-- 1. BLOOD PRESSURE -->
             <section class="space-y-2">
               <div class="flex items-center justify-between">
-                <span class="text-[11px] tracking-wider text-zinc-400 font-bold uppercase">
+                <span class="text-[11px] tracking-wider text-pk-secondary font-bold uppercase">
                   Blood Pressure (mmHg)
                 </span>
                 <button
                   v-if="!showRightArm"
                   @click="showRightArm = true"
-                  class="text-[11px] text-emerald-400 font-semibold active:opacity-70 cursor-pointer"
+                  class="text-[11px] text-emerald-500 font-semibold active:opacity-70 cursor-pointer"
                 >
                   + Add Right Arm
                 </button>
@@ -260,50 +260,50 @@ function copyLeftToRight() {
 
               <!-- Left Arm -->
               <div class="flex items-center gap-2">
-                <div class="w-7 text-[12px] font-bold text-zinc-400 text-center">L</div>
+                <div class="w-7 text-[12px] font-bold text-pk-secondary text-center">L</div>
                 <input
                   v-model="bpSystolicL"
                   type="text"
                   inputmode="numeric"
                   pattern="[0-9]*"
                   placeholder="Sys"
-                  class="flex-1 h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-white placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"
+                  class="flex-1 h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary placeholder:text-pk-muted focus:border-emerald-500 focus:outline-none"
                 />
-                <span class="text-zinc-500 font-vitals text-lg font-bold">/</span>
+                <span class="text-pk-muted font-vitals text-lg font-bold">/</span>
                 <input
                   v-model="bpDiastolicL"
                   type="text"
                   inputmode="numeric"
                   pattern="[0-9]*"
                   placeholder="Dia"
-                  class="flex-1 h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-white placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"
+                  class="flex-1 h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary placeholder:text-pk-muted focus:border-emerald-500 focus:outline-none"
                 />
               </div>
 
               <!-- Right Arm -->
               <div v-if="showRightArm" class="flex items-center gap-2 pt-1">
-                <div class="w-7 text-[12px] font-bold text-zinc-400 text-center">R</div>
+                <div class="w-7 text-[12px] font-bold text-pk-secondary text-center">R</div>
                 <input
                   v-model="bpSystolicR"
                   type="text"
                   inputmode="numeric"
                   pattern="[0-9]*"
                   placeholder="Sys"
-                  class="flex-1 h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-white placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"
+                  class="flex-1 h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary placeholder:text-pk-muted focus:border-emerald-500 focus:outline-none"
                 />
-                <span class="text-zinc-500 font-vitals text-lg font-bold">/</span>
+                <span class="text-pk-muted font-vitals text-lg font-bold">/</span>
                 <input
                   v-model="bpDiastolicR"
                   type="text"
                   inputmode="numeric"
                   pattern="[0-9]*"
                   placeholder="Dia"
-                  class="flex-1 h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-white placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"
+                  class="flex-1 h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary placeholder:text-pk-muted focus:border-emerald-500 focus:outline-none"
                 />
                 <button
                   v-if="bpSystolicL"
                   @click="copyLeftToRight"
-                  class="btn-press text-[11px] text-zinc-400 px-2 py-1 rounded-lg bg-zinc-800 border border-white/[0.08]"
+                  class="btn-press text-[11px] text-pk-secondary px-2 py-1 rounded-lg bg-pk-subtle border border-pk-border hover:text-pk-primary cursor-pointer"
                 >
                   Copy L
                 </button>
@@ -312,12 +312,12 @@ function copyLeftToRight() {
 
             <!-- 2. PULSES & DEFICIT -->
             <section class="space-y-2">
-              <span class="text-[11px] tracking-wider text-zinc-400 font-bold uppercase">
+              <span class="text-[11px] tracking-wider text-pk-secondary font-bold uppercase">
                 Heart Rate & Rhythm (bpm)
               </span>
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="text-[11px] text-zinc-400 font-medium block mb-1">
+                  <label class="text-[11px] text-pk-secondary font-medium block mb-1">
                     Apical Pulse
                   </label>
                   <input
@@ -326,11 +326,11 @@ function copyLeftToRight() {
                     inputmode="numeric"
                     pattern="[0-9]*"
                     placeholder="Auscultated"
-                    class="w-full h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-white placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"
+                    class="w-full h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary placeholder:text-pk-muted focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label class="text-[11px] text-zinc-400 font-medium block mb-1">
+                  <label class="text-[11px] text-pk-secondary font-medium block mb-1">
                     Radial Pulse
                   </label>
                   <input
@@ -339,7 +339,7 @@ function copyLeftToRight() {
                     inputmode="numeric"
                     pattern="[0-9]*"
                     placeholder="Palpated"
-                    class="w-full h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-white placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"
+                    class="w-full h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary placeholder:text-pk-muted focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -350,13 +350,13 @@ function copyLeftToRight() {
                 class="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-vitals font-semibold transition-all"
                 :class="[
                   pulseDeficit > 0
-                    ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
-                    : 'bg-zinc-900 text-zinc-400 border border-white/[0.06]'
+                    ? 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30'
+                    : 'bg-pk-input text-pk-muted border border-pk-border'
                 ]"
               >
                 <AlertTriangle v-if="pulseDeficit > 0" :size="13" />
                 <span>Calculated Pulse Deficit: {{ pulseDeficit }} bpm</span>
-                <span v-if="pulseDeficit === 0" class="text-emerald-400 text-[11px] font-sans font-normal ml-auto">
+                <span v-if="pulseDeficit === 0" class="text-emerald-500 text-[11px] font-sans font-normal ml-auto">
                   (Equal / Normal)
                 </span>
               </div>
@@ -364,12 +364,12 @@ function copyLeftToRight() {
 
             <!-- 3. RESPIRATORY & OXYGENATION -->
             <section class="space-y-2">
-              <span class="text-[11px] tracking-wider text-zinc-400 font-bold uppercase">
+              <span class="text-[11px] tracking-wider text-pk-secondary font-bold uppercase">
                 Respiratory & Oxygenation
               </span>
               <div class="grid grid-cols-3 gap-2.5">
                 <div>
-                  <label class="text-[11px] text-zinc-400 font-medium block mb-1">
+                  <label class="text-[11px] text-pk-secondary font-medium block mb-1">
                     SpO₂ (%)
                   </label>
                   <input
@@ -378,11 +378,11 @@ function copyLeftToRight() {
                     inputmode="numeric"
                     pattern="[0-9]*"
                     placeholder="98"
-                    class="w-full h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-sky-400 placeholder-zinc-600 focus:border-sky-500 focus:outline-none"
+                    class="w-full h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-sky-500 placeholder:text-pk-muted focus:border-sky-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label class="text-[11px] text-zinc-400 font-medium block mb-1">
+                  <label class="text-[11px] text-pk-secondary font-medium block mb-1">
                     Oximeter PR
                   </label>
                   <input
@@ -391,11 +391,11 @@ function copyLeftToRight() {
                     inputmode="numeric"
                     pattern="[0-9]*"
                     placeholder="61"
-                    class="w-full h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-white placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"
+                    class="w-full h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary placeholder:text-pk-muted focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label class="text-[11px] text-zinc-400 font-medium block mb-1">
+                  <label class="text-[11px] text-pk-secondary font-medium block mb-1">
                     Resp Rate
                   </label>
                   <input
@@ -404,14 +404,14 @@ function copyLeftToRight() {
                     inputmode="numeric"
                     pattern="[0-9]*"
                     placeholder="18"
-                    class="w-full h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-white placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"
+                    class="w-full h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary placeholder:text-pk-muted focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
 
               <!-- O2 Delivery Chips -->
               <div class="pt-1">
-                <label class="text-[11px] text-zinc-400 font-medium block mb-1.5">
+                <label class="text-[11px] text-pk-secondary font-medium block mb-1.5">
                   Oxygen Delivery Mode
                 </label>
                 <div class="flex flex-wrap gap-1.5">
@@ -419,11 +419,11 @@ function copyLeftToRight() {
                     v-for="opt in o2Options"
                     :key="opt"
                     @click="oxygenDelivery = opt"
-                    class="btn-press px-3 py-1.5 rounded-xl text-[12px] font-semibold border cursor-pointer"
+                    class="btn-press px-3 py-1.5 rounded-xl text-[12px] font-semibold border cursor-pointer transition-colors"
                     :class="[
                       oxygenDelivery === opt
-                        ? 'bg-sky-500 text-black border-sky-400 shadow-sm'
-                        : 'bg-zinc-900 text-zinc-300 border-white/[0.08] hover:border-white/[0.16]'
+                        ? 'bg-sky-500 text-white font-bold border-sky-400 shadow-sm'
+                        : 'bg-pk-card text-pk-secondary border-pk-border hover:border-pk-border-card'
                     ]"
                   >
                     {{ opt }}
@@ -434,12 +434,12 @@ function copyLeftToRight() {
 
             <!-- 4. TEMPERATURE & PAIN SCORE -->
             <section class="space-y-2">
-              <span class="text-[11px] tracking-wider text-zinc-400 font-bold uppercase">
+              <span class="text-[11px] tracking-wider text-pk-secondary font-bold uppercase">
                 Temperature & Pain Score
               </span>
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="text-[11px] text-zinc-400 font-medium block mb-1">
+                  <label class="text-[11px] text-pk-secondary font-medium block mb-1">
                     Temp (°C)
                   </label>
                   <input
@@ -447,14 +447,14 @@ function copyLeftToRight() {
                     type="text"
                     inputmode="decimal"
                     placeholder="36.8"
-                    class="w-full h-12 bg-zinc-900 border border-white/[0.1] rounded-xl text-center font-vitals text-base font-bold text-white placeholder-zinc-600 focus:border-emerald-500 focus:outline-none"
+                    class="w-full h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary placeholder:text-pk-muted focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label class="text-[11px] text-zinc-400 font-medium block mb-1">
+                  <label class="text-[11px] text-pk-secondary font-medium block mb-1">
                     Pain (0–10)
                   </label>
-                  <div class="h-12 flex items-center justify-center bg-zinc-900 border border-white/[0.1] rounded-xl font-vitals font-bold text-white text-base">
+                  <div class="h-12 flex items-center justify-center bg-pk-input border border-pk-border rounded-xl font-vitals font-bold text-pk-primary text-base">
                     {{ painScore !== null ? `${painScore} / 10` : 'None' }}
                   </div>
                 </div>
@@ -466,7 +466,7 @@ function copyLeftToRight() {
                   v-for="n in 11"
                   :key="n - 1"
                   @click="painScore = (painScore === n - 1) ? null : n - 1"
-                  class="btn-press flex-1 min-w-[30px] h-9.5 rounded-lg text-[12px] font-vitals font-bold flex items-center justify-center cursor-pointer"
+                  class="btn-press flex-1 min-w-[30px] h-9.5 rounded-lg text-[12px] font-vitals font-bold flex items-center justify-center cursor-pointer transition-colors"
                   :class="[
                     painScore === n - 1
                       ? (n - 1 <= 3
@@ -474,7 +474,7 @@ function copyLeftToRight() {
                           : n - 1 <= 6
                             ? 'bg-amber-400 text-black shadow-sm'
                             : 'bg-rose-500 text-white shadow-sm')
-                      : 'bg-zinc-900 text-zinc-400 border border-white/[0.06] hover:border-white/[0.14]'
+                      : 'bg-pk-card text-pk-secondary border border-pk-border hover:border-pk-border-card'
                   ]"
                 >
                   {{ n - 1 }}
@@ -484,23 +484,23 @@ function copyLeftToRight() {
 
             <!-- 5. CLINICAL NOTE -->
             <section class="space-y-1.5">
-              <span class="text-[11px] tracking-wider text-zinc-400 font-bold uppercase">
+              <span class="text-[11px] tracking-wider text-pk-secondary font-bold uppercase">
                 Clinical Observation Note
               </span>
               <textarea
                 v-model="notes"
                 rows="2"
                 placeholder="Observation (e.g. Post-nebulization, complained of mild dizziness)..."
-                class="w-full bg-zinc-900 border border-white/[0.1] rounded-xl p-3 text-white placeholder-zinc-600 text-base focus:border-emerald-500 focus:outline-none resize-none leading-relaxed"
+                class="w-full bg-pk-input border border-pk-border rounded-xl p-3 text-pk-primary placeholder:text-pk-muted text-base focus:border-emerald-500 focus:outline-none resize-none leading-relaxed"
               />
             </section>
           </div>
 
           <!-- Bottom Sticky Action Bar with Safe Area -->
-          <div class="px-5 pt-3 pb-safe bg-[#16161a] border-t border-white/[0.08]">
+          <div class="px-5 pt-3 pb-safe bg-pk-sheet border-t border-pk-border">
             <button
               @click="save"
-              class="btn-press w-full h-13 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-[16px] tracking-tight flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer"
+              class="btn-press w-full h-13 rounded-2xl bg-pk-fab text-pk-fab-text font-bold text-[16px] tracking-tight flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer transition-colors"
             >
               <Check :size="18" :stroke-width="2.5" />
               <span>{{ existingRecord ? 'Update Record' : 'Save Vitals Record' }}</span>

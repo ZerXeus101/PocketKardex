@@ -112,26 +112,26 @@ async function copyToClipboard(text, isAll = false) {
 
         <!-- Sheet Panel -->
         <div
-          class="relative w-full max-w-lg bg-[#16161a] rounded-t-[32px] border-t border-white/[0.12] shadow-2xl max-h-[90dvh] flex flex-col z-10 overflow-hidden"
+          class="relative w-full max-w-lg bg-pk-sheet rounded-t-[32px] border-t border-pk-border-sheet shadow-2xl max-h-[90dvh] flex flex-col z-10 overflow-hidden transition-colors"
         >
           <!-- Grab Handle -->
           <div class="flex justify-center pt-3 pb-1">
-            <div class="w-10 h-1 bg-white/20 rounded-full" />
+            <div class="w-10 h-1 bg-pk-muted/40 rounded-full" />
           </div>
 
           <!-- Header -->
           <div class="flex items-center justify-between px-5 py-2">
             <div>
-              <h2 class="text-[17px] font-bold tracking-tight text-white">
+              <h2 class="text-[17px] font-bold tracking-tight text-pk-primary">
                 Shift Endorsement
               </h2>
-              <p class="text-[11px] text-zinc-400">
+              <p class="text-[11px] text-pk-secondary">
                 Ward handoff shorthand formatted for reading or clipboard
               </p>
             </div>
             <button
               @click="$emit('close')"
-              class="btn-press w-8.5 h-8.5 rounded-full bg-white/[0.08] flex items-center justify-center text-zinc-400 hover:text-white"
+              class="btn-press w-8.5 h-8.5 rounded-full bg-pk-subtle flex items-center justify-center text-pk-secondary hover:text-pk-primary cursor-pointer"
             >
               <X :size="16" />
             </button>
@@ -143,17 +143,17 @@ async function copyToClipboard(text, isAll = false) {
             <!-- 1. Current Bed Endorsement -->
             <div v-if="activePatient" class="space-y-2">
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-1.5 text-white text-[13px] font-bold">
-                  <BedDouble :size="15" class="text-emerald-400" />
+                <div class="flex items-center gap-1.5 text-pk-primary text-[13px] font-bold">
+                  <BedDouble :size="15" class="text-emerald-500" />
                   <span>{{ activePatient.bedNumber }} Endorsement</span>
                 </div>
                 <button
                   @click="copyToClipboard(currentEndorsement, false)"
-                  class="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[12px] font-semibold cursor-pointer"
+                  class="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[12px] font-semibold cursor-pointer transition-colors"
                   :class="[
                     copiedBed
                       ? 'bg-emerald-500 text-black border-emerald-400 font-bold'
-                      : 'bg-zinc-900 text-zinc-300 border-white/[0.08] hover:border-white/[0.16]'
+                      : 'bg-pk-card text-pk-primary border-pk-border hover:border-pk-border-card'
                   ]"
                 >
                   <component :is="copiedBed ? Check : Copy" :size="13" />
@@ -161,28 +161,28 @@ async function copyToClipboard(text, isAll = false) {
                 </button>
               </div>
 
-              <div class="relative bg-zinc-900/90 rounded-2xl p-3 border border-white/[0.08]">
-                <pre class="text-[12px] font-vitals text-zinc-300 leading-relaxed whitespace-pre-wrap select-text">{{ currentEndorsement }}</pre>
+              <div class="relative bg-pk-input rounded-2xl p-3 border border-pk-border">
+                <pre class="text-[12px] font-vitals text-pk-primary leading-relaxed whitespace-pre-wrap select-text">{{ currentEndorsement }}</pre>
               </div>
             </div>
 
             <!-- Divider -->
-            <div class="border-t border-white/[0.06]" />
+            <div class="border-t border-pk-border" />
 
             <!-- 2. All Beds Summary -->
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-1.5 text-white text-[13px] font-bold">
-                  <Users :size="15" class="text-zinc-400" />
+                <div class="flex items-center gap-1.5 text-pk-primary text-[13px] font-bold">
+                  <Users :size="15" class="text-pk-secondary" />
                   <span>Full Round Summary (All Beds)</span>
                 </div>
                 <button
                   @click="copyToClipboard(allEndorsement, true)"
-                  class="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[12px] font-semibold cursor-pointer"
+                  class="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[12px] font-semibold cursor-pointer transition-colors"
                   :class="[
                     copiedAll
                       ? 'bg-emerald-500 text-black border-emerald-400 font-bold'
-                      : 'bg-zinc-900 text-zinc-300 border-white/[0.08] hover:border-white/[0.16]'
+                      : 'bg-pk-card text-pk-primary border-pk-border hover:border-pk-border-card'
                   ]"
                 >
                   <component :is="copiedAll ? Check : Copy" :size="13" />
@@ -190,8 +190,8 @@ async function copyToClipboard(text, isAll = false) {
                 </button>
               </div>
 
-              <div class="relative bg-zinc-900/90 rounded-2xl p-3 border border-white/[0.08]">
-                <pre class="text-[12px] font-vitals text-zinc-300 leading-relaxed whitespace-pre-wrap select-text">{{ allEndorsement }}</pre>
+              <div class="relative bg-pk-input rounded-2xl p-3 border border-pk-border">
+                <pre class="text-[12px] font-vitals text-pk-primary leading-relaxed whitespace-pre-wrap select-text">{{ allEndorsement }}</pre>
               </div>
             </div>
           </div>

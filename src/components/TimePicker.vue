@@ -46,29 +46,29 @@ function padTwo(n) {
         <select
           v-model.number="hours"
           @change="update"
-          class="w-18 h-12 bg-zinc-900 border border-white/[0.12] rounded-xl text-center font-vitals text-base font-bold text-white focus:border-emerald-500 focus:outline-none appearance-none cursor-pointer"
+          class="w-18 h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary focus:border-emerald-500 focus:outline-none appearance-none cursor-pointer transition-colors"
         >
-          <option v-for="h in 24" :key="h - 1" :value="h - 1">
+          <option v-for="h in 24" :key="h - 1" :value="h - 1" class="bg-zinc-900 text-white">
             {{ padTwo(h - 1) }}
           </option>
         </select>
-        <span class="absolute bottom-1 right-2 text-[9px] text-zinc-500 pointer-events-none">HR</span>
+        <span class="absolute bottom-1 right-2 text-[9px] text-pk-muted pointer-events-none">HR</span>
       </div>
 
-      <span class="text-emerald-400 font-vitals text-lg font-bold">:</span>
+      <span class="text-emerald-500 font-vitals text-lg font-bold">:</span>
 
       <!-- Minute Select -->
       <div class="relative">
         <select
           v-model.number="minutes"
           @change="update"
-          class="w-18 h-12 bg-zinc-900 border border-white/[0.12] rounded-xl text-center font-vitals text-base font-bold text-white focus:border-emerald-500 focus:outline-none appearance-none cursor-pointer"
+          class="w-18 h-12 bg-pk-input border border-pk-border rounded-xl text-center font-vitals text-base font-bold text-pk-primary focus:border-emerald-500 focus:outline-none appearance-none cursor-pointer transition-colors"
         >
-          <option v-for="m in 60" :key="m - 1" :value="m - 1">
+          <option v-for="m in 60" :key="m - 1" :value="m - 1" class="bg-zinc-900 text-white">
             {{ padTwo(m - 1) }}
           </option>
         </select>
-        <span class="absolute bottom-1 right-2 text-[9px] text-zinc-500 pointer-events-none">MIN</span>
+        <span class="absolute bottom-1 right-2 text-[9px] text-pk-muted pointer-events-none">MIN</span>
       </div>
     </div>
 
@@ -77,28 +77,28 @@ function padTwo(n) {
       <button
         @click="setPreset(0)"
         type="button"
-        class="btn-press px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/[0.08] text-[11px] font-semibold text-zinc-300"
+        class="btn-press px-2.5 py-1 rounded-lg bg-pk-subtle border border-pk-border text-[11px] font-semibold text-pk-secondary hover:text-pk-primary cursor-pointer transition-colors"
       >
         Now
       </button>
       <button
         @click="setPreset(15)"
         type="button"
-        class="btn-press px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/[0.08] text-[11px] font-semibold text-zinc-300"
+        class="btn-press px-2.5 py-1 rounded-lg bg-pk-subtle border border-pk-border text-[11px] font-semibold text-pk-secondary hover:text-pk-primary cursor-pointer transition-colors"
       >
         -15m
       </button>
       <button
         @click="setPreset(30)"
         type="button"
-        class="btn-press px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/[0.08] text-[11px] font-semibold text-zinc-300"
+        class="btn-press px-2.5 py-1 rounded-lg bg-pk-subtle border border-pk-border text-[11px] font-semibold text-pk-secondary hover:text-pk-primary cursor-pointer transition-colors"
       >
         -30m
       </button>
       <button
         @click="setPreset(60)"
         type="button"
-        class="btn-press px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/[0.08] text-[11px] font-semibold text-zinc-300"
+        class="btn-press px-2.5 py-1 rounded-lg bg-pk-subtle border border-pk-border text-[11px] font-semibold text-pk-secondary hover:text-pk-primary cursor-pointer transition-colors"
       >
         -1h
       </button>

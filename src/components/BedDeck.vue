@@ -53,18 +53,18 @@ function formatLastTime(meta) {
 </script>
 
 <template>
-  <div class="w-full bg-black/60 border-b border-white/[0.06] select-none">
+  <div class="w-full bg-pk-deck border-b border-pk-border select-none transition-colors">
     <div class="flex items-center max-w-lg mx-auto px-4 py-2.5">
       <!-- Permanent Left "Add Bed" Tile -->
       <button
         @click="$emit('addPatient')"
-        class="card-press flex-shrink-0 flex flex-col items-center justify-center w-[74px] h-[80px] rounded-2xl border border-dashed border-white/[0.14] text-zinc-400 bg-zinc-950/80 hover:border-emerald-500/50 hover:text-emerald-400 cursor-pointer mr-2.5 shadow-sm"
+        class="card-press flex-shrink-0 flex flex-col items-center justify-center w-[74px] h-[80px] rounded-2xl border border-dashed border-pk-border text-pk-secondary bg-pk-card hover:border-emerald-500/50 hover:text-emerald-500 cursor-pointer mr-2.5 shadow-sm transition-colors"
         aria-label="Add new patient bed"
       >
-        <div class="w-7 h-7 rounded-full bg-zinc-900 border border-white/[0.08] flex items-center justify-center mb-1">
-          <Plus :size="15" class="text-zinc-300" :stroke-width="2.5" />
+        <div class="w-7 h-7 rounded-full bg-pk-subtle border border-pk-border flex items-center justify-center mb-1">
+          <Plus :size="15" class="text-pk-secondary" :stroke-width="2.5" />
         </div>
-        <span class="text-[10px] font-semibold tracking-wide uppercase text-zinc-400">
+        <span class="text-[10px] font-semibold tracking-wide uppercase text-pk-secondary">
           Add Bed
         </span>
       </button>
@@ -78,18 +78,18 @@ function formatLastTime(meta) {
           v-for="patient in patients"
           :key="patient.id"
           @click="selectBed(patient.id)"
-          class="card-press relative flex-shrink-0 flex flex-col justify-between w-[132px] h-[80px] p-2.5 rounded-2xl border text-left cursor-pointer"
+          class="card-press relative flex-shrink-0 flex flex-col justify-between w-[132px] h-[80px] p-2.5 rounded-2xl border text-left cursor-pointer transition-colors shadow-sm"
           :class="[
             activePatientId === patient.id
-              ? 'bg-zinc-900 border-emerald-500/50 shadow-md shadow-black/80 ring-1 ring-emerald-500/30'
-              : 'bg-[#121215] border-white/[0.08] hover:border-white/[0.16]'
+              ? 'bg-pk-card-active border-emerald-500/60 ring-1 ring-emerald-500/30'
+              : 'bg-pk-card border-pk-border hover:border-pk-border-card'
           ]"
         >
           <!-- Top: Bed Number and Alert Beacon -->
           <div class="flex items-center justify-between w-full">
             <span
               class="text-[14px] font-bold tracking-tight truncate max-w-[94px]"
-              :class="activePatientId === patient.id ? 'text-white' : 'text-zinc-200'"
+              :class="activePatientId === patient.id ? 'text-pk-primary font-black' : 'text-pk-primary'"
             >
               {{ patient.bedNumber }}
             </span>
@@ -111,7 +111,7 @@ function formatLastTime(meta) {
           </div>
 
           <!-- Middle: Initials & Age/Gender -->
-          <div class="text-[11px] text-zinc-400 font-medium truncate w-full">
+          <div class="text-[11px] text-pk-secondary font-medium truncate w-full">
             <template v-if="patient.initials">{{ patient.initials }}</template>
             <template v-if="patient.initials && patient.ageGender"> · </template>
             <template v-if="patient.ageGender">{{ patient.ageGender }}</template>
@@ -124,15 +124,15 @@ function formatLastTime(meta) {
               class="text-[10px] font-vitals font-medium tracking-tight truncate"
               :class="[
                 patientMeta.get(patient.id)?.flags?.hasAny
-                  ? 'text-rose-400 font-semibold'
-                  : 'text-zinc-500'
+                  ? 'text-rose-500 font-semibold'
+                  : 'text-pk-muted'
               ]"
             >
               {{ formatLastTime(patientMeta.get(patient.id)) }}
             </span>
             <span
               v-if="activePatientId === patient.id"
-              class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400"
+              class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"
             />
           </div>
         </button>
@@ -140,7 +140,7 @@ function formatLastTime(meta) {
         <!-- Empty beds placeholder if no beds assigned -->
         <div
           v-if="patients.length === 0"
-          class="flex items-center px-3 py-4 text-[12px] text-zinc-400 italic"
+          class="flex items-center px-3 py-4 text-[12px] text-pk-muted italic"
         >
           No beds assigned yet
         </div>
