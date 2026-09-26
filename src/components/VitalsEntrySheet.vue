@@ -236,7 +236,7 @@ function copyLeftToRight() {
               <component :is="showTimePicker ? ChevronUp : ChevronDown" :size="13" class="text-pk-secondary" />
             </button>
             <div v-if="showTimePicker" class="mt-2.5 p-3 rounded-2xl bg-pk-input border border-pk-border shadow-sm">
-              <TimePicker v-model="timestamp" />
+              <TimePicker v-model="timestamp" @close="showTimePicker = false" />
             </div>
           </div>
 
